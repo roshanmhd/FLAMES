@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-export default function FireBackground({ theme }) {
+// Memoize to prevent re-renders when parent state changes but theme is same
+const FireBackground = React.memo(function FireBackground({ theme }) {
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -132,4 +133,6 @@ export default function FireBackground({ theme }) {
     }, [theme]);
 
     return <div id="fire-background" className="fire-background" ref={containerRef}></div>;
-}
+});
+
+export default FireBackground;

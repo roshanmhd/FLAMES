@@ -75,10 +75,12 @@ body {
 }
 
 /* Base shape for all particles */
+/* Base shape for all particles */
 .fire-particle {
   position: absolute;
   pointer-events: none;
-  transition: all 0.5s ease;
+  transition: opacity 0.5s ease;
+  will-change: transform, opacity;
 }
 
 /* 1. Embers: Fast, spark-like */
@@ -99,11 +101,13 @@ body {
   width: 500px;
   height: 500px;
   background: radial-gradient(circle, var(--particle-color-1, var(--c-lover)) 0%, transparent 70%);
-  filter: blur(60px);
+  filter: blur(40px); /* Reduced blur for performance */
   opacity: 0.3;
   border-radius: 50%;
   animation: fog-float 15s ease-in-out infinite alternate;
   mix-blend-mode: screen;
+  /* Use 3D transform to force hardware acceleration */
+  transform: translateZ(0);
 }
 
 /* Animations */
