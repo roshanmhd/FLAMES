@@ -66,19 +66,53 @@ export default function FireBackground({ theme }) {
             createParticle('fog');
         }
 
-        // Mouse Interaction
-        const handleMouseMove = (e) => {
-            const x = (e.clientX / window.innerWidth) * 100;
-            const y = (e.clientY / window.innerHeight) * 100;
+        // Interaction State
+        let isInteracting = false;
+        let animationFrameId;
+
+        // Auto-animation for mobile (when not interacting)
+        const animate = () => {
+            // Check if mobile (using standard tablet/mobile width or touch capability)
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile && !isInteracting) {
+                const time = Date.now() / 1500;
+                // Create a smooth wandering path (Lissajous curve)
+                const x = 50 + 35 * Math.sin(time);
+                const y = 50 + 35 * Math.cos(time * 1.3);
+
+                container.style.setProperty('--mouse-x', `${x}%`);
+                container.style.setProperty('--mouse-y', `${y}%`);
+            }
+
+            animationFrameId = requestAnimationFrame(animate);
+        };
+
+        // Start loop
+        animate();
+
+        // Interaction Handler
+        const handleInteraction = (clientX, clientY) => {
+            isInteracting = true;
+            const x = (clientX / window.innerWidth) * 100;
+            const y = (clientY / window.innerHeight) * 100;
             container.style.setProperty('--mouse-x', `${x}%`);
             container.style.setProperty('--mouse-y', `${y}%`);
         };
 
-        window.addEventListener('mousemove', handleMouseMove);
+        const onMouseMove = (e) => handleInteraction(e.clientX, e.clientY);
+        const onTouchMove = (e) => handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+        const onTouchStart = (e) => handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('touchmove', onTouchMove, { passive: false });
+        window.addEventListener('touchstart', onTouchStart, { passive: false });
 
         return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            // We could clear particles but container gets removed anyway
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('touchmove', onTouchMove);
+            window.removeEventListener('touchstart', onTouchStart);
+            cancelAnimationFrame(animationFrameId);
         };
     }, []);
 
