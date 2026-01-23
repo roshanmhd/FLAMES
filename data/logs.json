@@ -1,0 +1,23 @@
+[
+  {
+    "name1": "dksd",
+    "name2": "ajsdnjka",
+    "result": "Marriage",
+    "timestamp": "2026-01-23T16:07:09.694Z",
+    "id": "1769184429694"
+  },
+  {
+    "name1": "User",
+    "name2": "Partner",
+    "result": "Enemy",
+    "timestamp": "2026-01-23T16:03:53.195Z",
+    "id": "1769184233195"
+  },
+  {
+    "name1": "User",
+    "name2": "Partner",
+    "result": "Enemy",
+    "timestamp": "2026-01-23T16:02:47.641Z",
+    "id": "1769184167641"
+  }
+]

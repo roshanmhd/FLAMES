@@ -100,6 +100,23 @@ export default function Home() {
     const rChar = flamesArgs[0];
     saveToHistory(name1, name2, rChar);
 
+    // Log the attempt
+    try {
+      fetch('/api/log', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name1: name1,
+          name2: name2,
+          result: FLAMES_DATA[rChar].title
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to log:', error);
+    }
+
     // Transition UI
     setShowForm(false);
     setTimeout(() => {
