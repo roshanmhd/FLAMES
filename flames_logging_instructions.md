@@ -23,3 +23,17 @@ To change the password, edit `src/app/admin/page.js`:
 if (password === 'admin123') {
 // Change 'admin123' to your desired password
 ```
+
+## 🚀 How to Deploy on Vercel
+When you upload this to Vercel, the logging won't work immediately because Vercel doesn't know your Supabase password (Keys). You must tell Vercel what they are.
+
+1.  Go to your **Project Settings** in Vercel.
+2.  Click on **Environment Variables** (left sidebar).
+3.  Add these two variables (copy them from your `.env.local` file):
+    *   **Key**: `NEXT_PUBLIC_SUPABASE_URL`
+        *   **Value**: `https://facgvaovpmgsazbmbgss.supabase.co`
+    *   **Key**: `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+        *   **Value**: (Your long key starting with `sb_publishable...`)
+4.  Click **Save**.
+5.  **Redeploy** your app (Deployment -> Redeploy) for changes to take effect.
+
