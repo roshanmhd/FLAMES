@@ -1,49 +1,58 @@
-
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const LOG_FILE_PATH = path.join(process.cwd(), 'data', 'logs.json');
-
-// Helper to ensure data directory exists and read logs
-const getLogs = () => {
-    try {
-        if (!fs.existsSync(LOG_FILE_PATH)) {
-            return [];
-        }
-        const fileContent = fs.readFileSync(LOG_FILE_PATH, 'utf8');
-        return JSON.parse(fileContent);
-    } catch (error) {
-        console.error('Error reading logs:', error);
-        return [];
-    }
-};
+import { supabase } from '@/lib/supabaseClient';
 
 export async function GET() {
-    const logs = getLogs();
-    return NextResponse.json(logs);
+    if (!supabase) {
+        // Fallback or empty if not configured yet, to prevent crashes before key is added
+        console.warn('Supabase not configured');
+        return NextResponse.json([]);
+    }
+
+    const { data, error } = await supabase
+        .from('logs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Supabase error:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    // Formatting for frontend compatibility (frontend expects 'timestamp')
+    const formattedData = data.map(entry => ({
+        ...entry,
+        timestamp: entry.created_at
+    }));
+
+    return NextResponse.json(formattedData);
 }
 
 export async function POST(request) {
+    if (!supabase) {
+        return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
+    }
+
     try {
         const body = await request.json();
-        const logs = getLogs();
 
-        const newLog = {
-            ...body,
-            timestamp: new Date().toISOString(),
-            id: Date.now().toString()
-        };
-
-        logs.unshift(newLog); // Add new log to the beginning
-
-        // Ensure directory exists
-        const dir = path.dirname(LOG_FILE_PATH);
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
+        // Validate body
+        if (!body.name1 || !body.name2 || !body.result) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        fs.writeFileSync(LOG_FILE_PATH, JSON.stringify(logs, null, 2));
+        const { error } = await supabase
+            .from('logs')
+            .insert([
+                {
+                    name1: body.name1,
+                    name2: body.name2,
+                    result: body.result
+                }
+            ]);
+
+        if (error) {
+            throw error;
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

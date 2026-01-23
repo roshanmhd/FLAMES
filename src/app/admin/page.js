@@ -24,7 +24,12 @@ export default function AdminPage() {
         try {
             const res = await fetch('/api/log');
             const data = await res.json();
-            setLogs(data);
+            if (Array.isArray(data)) {
+                setLogs(data);
+            } else {
+                console.warn('Logs data is not an array:', data);
+                setLogs([]);
+            }
         } catch (error) {
             console.error('Failed to fetch logs:', error);
         } finally {
