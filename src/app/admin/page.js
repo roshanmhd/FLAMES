@@ -73,8 +73,6 @@ export default function AdminPage() {
     const handleDeleteSelected = async () => {
         if (selectedIds.size === 0) return;
 
-        if (!confirm(`Are you sure you want to delete ${selectedIds.size} logs?`)) return;
-
         setLoading(true);
         try {
             const res = await fetch('/api/log', {

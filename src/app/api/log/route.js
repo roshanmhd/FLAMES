@@ -64,8 +64,28 @@ export async function POST(request) {
     }
 }
 
+
+import { createClient } from '@supabase/supabase-js';
+
 export async function DELETE(request) {
-    if (!supabase) {
+    let client = supabase;
+
+    // Check for Service Role Key to bypass RLS
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        client = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_ROLE_KEY,
+            {
+                auth: {
+                    persistSession: false,
+                    autoRefreshToken: false,
+                    detectSessionInUrl: false,
+                }
+            }
+        );
+    }
+
+    if (!client) {
         return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
     }
 
@@ -76,7 +96,7 @@ export async function DELETE(request) {
             return NextResponse.json({ error: 'Invalid IDs format' }, { status: 400 });
         }
 
-        const { error } = await supabase
+        const { error } = await client
             .from('logs')
             .delete()
             .in('id', body.ids);
