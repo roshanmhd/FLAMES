@@ -63,3 +63,31 @@ export async function POST(request) {
         return NextResponse.json({ success: false, error: error.message || 'Failed to save log' }, { status: 500 });
     }
 }
+
+export async function DELETE(request) {
+    if (!supabase) {
+        return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
+    }
+
+    try {
+        const body = await request.json();
+
+        if (!body.ids || !Array.isArray(body.ids)) {
+            return NextResponse.json({ error: 'Invalid IDs format' }, { status: 400 });
+        }
+
+        const { error } = await supabase
+            .from('logs')
+            .delete()
+            .in('id', body.ids);
+
+        if (error) {
+            throw error;
+        }
+
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting logs:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}

@@ -3,7 +3,7 @@
   --bg-dark: #0f172a;
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
-  --primary-glow: #ec4899;
+  --primary-glow: #10b981;
   --secondary-glow: #8b5cf6;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
@@ -346,7 +346,8 @@ input {
 
 input:focus {
   border-color: var(--primary-glow);
-  box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
+  /* Input focus ring shadow was pink, changing to green */
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
   background: rgba(0, 0, 0, 0.3);
 }
 
@@ -363,18 +364,6 @@ input:focus {
   width: 24px;
   height: 24px;
   filter: drop-shadow(0 0 10px var(--primary-glow));
-}
-
-@keyframes beat {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.2);
-  }
 }
 
 /* Button */
@@ -397,7 +386,8 @@ input:focus {
 
 .calculate-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px -5px rgba(236, 72, 153, 0.4);
+  /* Button shadow was pink, changing to green */
+  box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
 }
 
 .calculate-btn:active {
