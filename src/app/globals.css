@@ -48,31 +48,75 @@ body {
   position: relative;
 }
 
-/* --- Advanced Dynamic Background (Spotlight Interaction) --- */
+/* --- Video Background Container --- */
 .fire-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
-
-  /* Bright Default Colors */
-  --bg-inner: #4338ca;
-  --bg-outer: #020617;
-  --mouse-x: 50%;
-  --mouse-y: 50%;
-
-  /* Dynamic Spotlight: Bright center following mouse */
-  background-color: var(--bg-outer);
-  background-image: radial-gradient(circle 600px at var(--mouse-x) var(--mouse-y),
-      var(--bg-inner),
-      var(--bg-outer));
-
+  z-index: -10;
+  background: #0f172a;
+  /* Fallback */
   overflow: hidden;
-  /* Color transitions only */
-  transition: --bg-inner 0.5s ease, --bg-outer 0.5s ease;
+  pointer-events: none;
 }
+
+.fire-background video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.4);
+  /* Dark overlay to ensure text readability */
+  z-index: 1;
+}
+
+
+
+/* App UI Styles */
+.app-container {
+  width: 100%;
+  max-width: 480px;
+  padding: 20px;
+  perspective: 1000px;
+  z-index: 10;
+  position: relative;
+  /* Ensure UI is above rain */
+}
+
+/* Glass Card Update for Rain Theme */
+.card {
+  background: rgba(15, 23, 42, 0.85);
+  /* Slightly more opaque background to prevent particles showing through too much */
+  /* Darker base */
+  backdrop-filter: blur(12px);
+  /* Strong blur */
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+  /* Inner sheen */
+  position: relative;
+  z-index: 20;
+  overflow: hidden;
+}
+
 
 /* Base shape for all particles */
 /* Base shape for all particles */
@@ -101,7 +145,8 @@ body {
   width: 500px;
   height: 500px;
   background: radial-gradient(circle, var(--particle-color-1, var(--c-lover)) 0%, transparent 70%);
-  filter: blur(40px); /* Reduced blur for performance */
+  filter: blur(40px);
+  /* Reduced blur for performance */
   opacity: 0.3;
   border-radius: 50%;
   animation: fog-float 15s ease-in-out infinite alternate;
@@ -592,4 +637,144 @@ footer {
   border-radius: 4px;
   font-weight: 700;
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Generic Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.table-row-animate {
+  opacity: 0;
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Admin Page Styles */
+.admin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+}
+
+.admin-card {
+  width: 100%;
+}
+
+.login-card {
+  max-width: 400px;
+}
+
+.logs-card {
+  max-width: 900px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.admin-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.refresh-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.admin-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.admin-table tr {
+  transition: background 0.2s ease;
+}
+
+
+
+
+.result-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  min-width: 60px;
+  text-align: center;
+}
+
+.error-box {
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #fca5a5;
+  font-size: 0.9rem;
 }

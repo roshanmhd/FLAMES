@@ -1,16 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import AnimatedList from '../../components/AnimatedList';
+import LetterGlitch from '../../components/LetterGlitch';
 
 export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
     const [logs, setLogs] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState(null);
 
     const handleLogin = (e) => {
         e.preventDefault();
-        // Simple hardcoded password
         if (password === 'admin123') {
             setIsAuthenticated(true);
             fetchLogs();
@@ -21,9 +23,15 @@ export default function AdminPage() {
 
     const fetchLogs = async () => {
         setLoading(true);
+        setErrorMsg(null);
         try {
             const res = await fetch('/api/log');
             const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to fetch logs');
+            }
+
             if (Array.isArray(data)) {
                 setLogs(data);
             } else {
@@ -32,25 +40,58 @@ export default function AdminPage() {
             }
         } catch (error) {
             console.error('Failed to fetch logs:', error);
+            setErrorMsg(error.message);
         } finally {
             setLoading(false);
         }
     };
 
+    // Transform logs into renderable items for AnimatedList
+    const logItems = logs.map(log => (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <span style={{ fontSize: '0.85rem', color: '#94a3b8', minWidth: '140px' }}>
+                {new Date(log.timestamp).toLocaleString()}
+            </span>
+            <span style={{ fontWeight: '500', color: '#fff', flex: 1, textAlign: 'center' }}>
+                {log.name1} <span style={{ color: '#ec4899' }}>&</span> {log.name2}
+            </span>
+            <span className="result-badge" style={{ marginLeft: '10px' }}>
+                {log.result}
+            </span>
+        </div>
+    ));
+
     if (!isAuthenticated) {
         return (
-            <div style={styles.container}>
-                <div style={styles.card}>
-                    <h1 style={styles.title}>Admin Login</h1>
-                    <form onSubmit={handleLogin} style={styles.form}>
-                        <input
-                            type="password"
-                            placeholder="Enter Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            style={styles.input}
-                        />
-                        <button type="submit" style={styles.button}>Login</button>
+            <div className="admin-container">
+                <div className="fire-background">
+                    <LetterGlitch
+                        glitchColors={['#2b4539', '#61dca3', '#61b3dc']}
+                        glitchSpeed={50}
+                        centerVignette={true}
+                        outerVignette={false}
+                        smooth={true}
+                    />
+                </div>
+
+                <div className="card admin-card login-card animate-fade-in-up">
+                    <h1 className="title" style={{ fontSize: '2rem', marginBottom: '2rem' }}>Admin Login</h1>
+                    <form onSubmit={handleLogin}>
+                        <div className="input-group">
+                            <div className="input-wrapper">
+                                <label>Password</label>
+                                <input
+                                    type="password"
+                                    placeholder="Enter Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <button type="submit" className="calculate-btn">
+                            Login
+                            <div className="btn-glow"></div>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -58,127 +99,52 @@ export default function AdminPage() {
     }
 
     return (
-        <div style={styles.container}>
-            <div style={{ ...styles.card, maxWidth: '800px' }}>
-                <div style={styles.header}>
-                    <h1 style={styles.title}>FLAMES Logs</h1>
-                    <button onClick={fetchLogs} style={styles.refreshBtn}>Refresh</button>
+        <div className="admin-container">
+            <div className="fire-background">
+                <LetterGlitch
+                    glitchColors={['#2b4539', '#61dca3', '#61b3dc']}
+                    glitchSpeed={50}
+                    centerVignette={true}
+                    outerVignette={false}
+                    smooth={true}
+                />
+            </div>
+
+            <div className="card admin-card logs-card animate-fade-in-up" style={{ maxWidth: '800px', padding: '20px' }}>
+                <div className="admin-header">
+                    <h1 className="admin-title">FLAMES Logs</h1>
+                    <button onClick={fetchLogs} className="refresh-btn">
+                        Refresh
+                    </button>
                 </div>
 
+                {errorMsg && (
+                    <div className="error-box animate-fade-in-up">
+                        Error: {errorMsg}
+                    </div>
+                )}
+
                 {loading ? (
-                    <p>Loading...</p>
+                    <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
+                        Loading data...
+                    </div>
                 ) : (
-                    <div style={styles.tableWrapper}>
-                        <table style={styles.table}>
-                            <thead>
-                                <tr>
-                                    <th style={styles.th}>Time</th>
-                                    <th style={styles.th}>Your Name</th>
-                                    <th style={styles.th}>Partner Name</th>
-                                    <th style={styles.th}>Result</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {logs.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="4" style={styles.td}>No logs yet</td>
-                                    </tr>
-                                ) : (
-                                    logs.map((log) => (
-                                        <tr key={log.id}>
-                                            <td style={styles.td}>{new Date(log.timestamp).toLocaleString()}</td>
-                                            <td style={styles.td}>{log.name1}</td>
-                                            <td style={styles.td}>{log.name2}</td>
-                                            <td style={styles.td}>{log.result}</td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
+                    <div className="table-wrapper" style={{ marginTop: '20px' }}>
+                        {logs.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>
+                                No logs found
+                            </div>
+                        ) : (
+                            <AnimatedList
+                                items={logItems}
+                                showGradients={true}
+                                displayScrollbar={false}
+                                className="custom-animated-list"
+                            />
+                        )}
                     </div>
                 )}
             </div>
         </div>
     );
 }
-
-const styles = {
-    container: {
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: '#1a1a1a',
-        color: '#fff',
-        fontFamily: 'system-ui, sans-serif',
-        padding: '20px'
-    },
-    card: {
-        background: '#2a2a2a',
-        padding: '2rem',
-        borderRadius: '12px',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-        width: '100%',
-        maxWidth: '400px',
-    },
-    title: {
-        margin: '0 0 1.5rem 0',
-        textAlign: 'center',
-        color: '#ff6b6b'
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem'
-    },
-    input: {
-        padding: '12px',
-        borderRadius: '6px',
-        border: '1px solid #444',
-        background: '#333',
-        color: '#fff',
-        fontSize: '1rem'
-    },
-    button: {
-        padding: '12px',
-        borderRadius: '6px',
-        border: 'none',
-        background: '#ff6b6b',
-        color: 'white',
-        fontSize: '1rem',
-        cursor: 'pointer',
-        fontWeight: 'bold'
-    },
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '1rem'
-    },
-    refreshBtn: {
-        padding: '8px 16px',
-        borderRadius: '4px',
-        background: '#444',
-        color: 'white',
-        border: 'none',
-        cursor: 'pointer'
-    },
-    tableWrapper: {
-        overflowX: 'auto'
-    },
-    table: {
-        width: '100%',
-        borderCollapse: 'collapse',
-        textAlign: 'left'
-    },
-    th: {
-        padding: '12px',
-        borderBottom: '1px solid #444',
-        color: '#aaa',
-        fontWeight: 600
-    },
-    td: {
-        padding: '12px',
-        borderBottom: '1px solid #333',
-    }
-};

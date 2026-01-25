@@ -1,0 +1,81 @@
+/* AnimatedList.css */
+.scroll-list-container {
+    position: relative;
+    height: 600px;
+    width: 100%;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.scroll-list {
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+
+    /* Hide scrollbar for Chrome/Safari/Opera */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.scroll-list.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.item.selected {
+    background: rgba(236, 72, 153, 0.15);
+    border-color: #ec4899;
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+}
+
+.item-text {
+    margin: 0;
+    color: #e2e8f0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.top-gradient,
+.bottom-gradient {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+.top-gradient {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 1), transparent);
+}
+
+.bottom-gradient {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 1), transparent);
+}

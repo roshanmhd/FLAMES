@@ -4,7 +4,9 @@ import { supabase } from '@/lib/supabaseClient';
 export async function GET() {
     if (!supabase) {
         // Fallback or empty if not configured yet, to prevent crashes before key is added
-        console.warn('Supabase not configured');
+        console.error('Supabase client is NULL in API route.');
+        console.log('Env Check - URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Found' : 'Missing');
+        console.log('Env Check - Key:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Found' : 'Missing');
         return NextResponse.json([]);
     }
 
@@ -29,6 +31,7 @@ export async function GET() {
 
 export async function POST(request) {
     if (!supabase) {
+        console.error('POST: Supabase client is NULL.');
         return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
     }
 
@@ -56,7 +59,7 @@ export async function POST(request) {
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Error saving log:', error);
-        return NextResponse.json({ success: false, error: 'Failed to save log' }, { status: 500 });
+        console.error('Full Error saving log:', error);
+        return NextResponse.json({ success: false, error: error.message || 'Failed to save log' }, { status: 500 });
     }
 }
