@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import AnimatedList from '../../components/AnimatedList';
+import Lightning from '../../components/Lightning';
 
 
 export default function AdminPage() {
@@ -127,8 +128,7 @@ export default function AdminPage() {
     if (!isAuthenticated) {
         return (
             <div className="admin-container">
-
-
+                <Lightning />
                 <div className="card admin-card login-card animate-fade-in-up">
                     <h1 className="title" style={{ fontSize: '2rem', marginBottom: '2rem' }}>Admin Login</h1>
                     <form onSubmit={handleLogin}>
@@ -155,8 +155,7 @@ export default function AdminPage() {
 
     return (
         <div className="admin-container">
-
-
+            <Lightning />
             <div className="card admin-card logs-card animate-fade-in-up" style={{ maxWidth: '800px', padding: '20px' }}>
                 <div className="admin-header">
                     <h1 className="admin-title">FLAMES Logs</h1>
