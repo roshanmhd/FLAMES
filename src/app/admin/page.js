@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import AnimatedList from '../../components/AnimatedList';
-import LetterGlitch from '../../components/LetterGlitch';
+
 
 export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -127,15 +127,7 @@ export default function AdminPage() {
     if (!isAuthenticated) {
         return (
             <div className="admin-container">
-                <div className="fire-background">
-                    <LetterGlitch
-                        glitchColors={['#2b4539', '#61dca3', '#61b3dc']}
-                        glitchSpeed={50}
-                        centerVignette={true}
-                        outerVignette={false}
-                        smooth={true}
-                    />
-                </div>
+
 
                 <div className="card admin-card login-card animate-fade-in-up">
                     <h1 className="title" style={{ fontSize: '2rem', marginBottom: '2rem' }}>Admin Login</h1>
@@ -163,15 +155,7 @@ export default function AdminPage() {
 
     return (
         <div className="admin-container">
-            <div className="fire-background">
-                <LetterGlitch
-                    glitchColors={['#2b4539', '#61dca3', '#61b3dc']}
-                    glitchSpeed={50}
-                    centerVignette={true}
-                    outerVignette={false}
-                    smooth={true}
-                />
-            </div>
+
 
             <div className="card admin-card logs-card animate-fade-in-up" style={{ maxWidth: '800px', padding: '20px' }}>
                 <div className="admin-header">
