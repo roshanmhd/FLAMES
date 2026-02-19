@@ -100,21 +100,67 @@ body {
 
 /* Glass Card Update for Rain Theme */
 .card {
-  background: rgba(15, 23, 42, 0.85);
-  /* Slightly more opaque background to prevent particles showing through too much */
-  /* Darker base */
-  backdrop-filter: blur(12px);
-  /* Strong blur */
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    inset 0 0 20px rgba(255, 255, 255, 0.05);
-  /* Inner sheen */
   position: relative;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow:
+    0 20px 40px -10px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  /* Subtle border */
   z-index: 20;
   overflow: hidden;
+  isolation: isolate;
+  /* Create new stacking context */
+}
+
+/* Advanced Glowing Border Effect */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 25px;
+  /* Slightly larger than card */
+  padding: 1px;
+  /* Border width */
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.05) 20%,
+      rgba(16, 185, 129, 0.2) 80%,
+      /* Hint of primary color */
+      rgba(139, 92, 246, 0.2) 100%
+      /* Hint of secondary color */
+    );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Inner glow accent */
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 20%,
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0.2) 80%,
+      transparent 100%);
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 
@@ -333,8 +379,9 @@ header {
 
 input {
   width: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* More subtle border */
   padding: 16px;
   border-radius: 12px;
   color: white;
@@ -342,6 +389,8 @@ input {
   font-family: var(--font-main);
   outline: none;
   transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Inner shadow for depth */
 }
 
 input:focus {
